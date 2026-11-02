@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090510"><title>ALMAZ SHOP</title>
+<style>
+:root{--bg:#08050e;--panel:#130b20;--purple:#9400ff;--line:#63218b;--text:#fff;--muted:#c9bdd5;--yellow:#ffe500}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+header{height:86px;padding:0 3%;display:flex;align-items:center;justify-content:space-between;gap:20px;background:#09060f;border-bottom:1px solid #7b16b4;position:sticky;top:0;z-index:10}
+.logo{font-size:clamp(21px,2.5vw,34px);font-weight:900;white-space:nowrap}.logo span{color:#bd28ff}nav{display:flex;gap:clamp(12px,2.5vw,38px)}nav a{color:white;text-decoration:none;font-weight:700;font-size:17px}nav a:hover{color:#d58aff}
+.btn{border:1px solid var(--line);border-radius:15px;padding:13px 20px;color:white;background:transparent;font-size:16px;font-weight:700;cursor:pointer}.primary,.buy{background:linear-gradient(100deg,#a000ff,#5900d5);border:0;color:#fff}
+.hero img{width:100%;height:auto;display:block}.section-title{text-align:center;font-size:clamp(25px,3vw,34px);margin:24px 0 20px}
+.products{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px;padding:0 2.4%}.card{min-width:0;text-align:center;padding:14px 12px 16px;border:1px solid #542078;border-radius:17px;background:linear-gradient(145deg,#170d24,#09060f);box-shadow:inset 0 0 18px #250b38}.card:hover{transform:translateY(-4px);box-shadow:0 0 20px #7500bd;transition:.2s}
+.card img{width:100%;height:92px;object-fit:contain;margin-bottom:5px}.card h3{font-size:clamp(19px,2vw,27px)}.price{font-size:clamp(18px,1.8vw,24px);font-weight:900;color:var(--yellow);margin:10px 0 14px}.buy{width:100%;padding:13px 8px;border-radius:12px;font-size:17px;font-weight:700;cursor:pointer}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding:28px 2.4%}.feature{border:1px solid #7130a0;border-radius:17px;padding:22px 15px;text-align:center;background:linear-gradient(110deg,#1b0b2a,#10091a)}.feature .icon{font-size:36px}.feature h3{font-size:21px;margin:8px 0}.feature p{color:var(--muted)}
+footer{text-align:center;border-top:1px solid #542078;padding:25px;color:#bfb1cb;line-height:1.8}
+.modal{display:none;position:fixed;inset:0;background:#000b;z-index:20;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.modal-box{width:min(440px,100%);background:#160b22;border:1px solid #9b30d5;border-radius:18px;padding:25px;box-shadow:0 0 35px #6c00a8}.modal-box h2{margin-bottom:16px}.modal-box label{display:block;margin:12px 0 6px;color:#e6d8f0}.modal-box input{width:100%;padding:13px;border-radius:10px;border:1px solid #69318a;background:#090510;color:white;font-size:16px}.modal-actions{display:flex;gap:10px;margin-top:18px}.modal-actions button{flex:1}.note{font-size:12px;color:#c7b7d3;margin-top:12px;line-height:1.5}
+@media(max-width:1050px){.products{grid-template-columns:repeat(3,1fr)}nav{gap:12px}nav a{font-size:14px}}
+@media(max-width:680px){header{height:70px;padding:0 15px}nav{display:none}.btn{padding:10px 12px;font-size:13px}.products{grid-template-columns:repeat(2,minmax(0,1fr));padding:0 12px;gap:10px}.card{padding:10px 8px 12px}.card img{height:78px}.features{grid-template-columns:1fr;padding:20px 12px}}
+</style></head>
+<body>
+<header><div class="logo">💎 ALMAZ <span>SHOP</span></div><nav><a href="#home">Асосӣ</a><a href="#products">Бастаҳои алмос</a><a href="#how">Тарзи харид</a><a href="#contact">Тамос</a></nav><button class="btn primary" onclick="document.getElementById('products').scrollIntoView()">Хариди алмос</button></header>
+<main id="home"><section class="hero"><img src="images/banner.png" alt="ALMAZ SHOP"></section>
+<h1 class="section-title" id="products">💎 Бастаҳои Алмос</h1><section class="products" id="productList"></section>
+<section class="features" id="how"><div class="feature"><div class="icon">🛡️</div><h3>Бехатар</h3><p>Маълумоти фармоиш барои коркарди фармоиш.</p></div><div class="feature"><div class="icon">⚡</div><h3>Расонидани тез</h3><p>Пас аз тасдиқи фармоиш.</p></div><div class="feature"><div class="icon">🎧</div><h3>Дастгирӣ</h3><p>Барои саволҳо бо мо тамос гиред.</p></div></section></main>
+<footer id="contact"><strong>💎 ALMAZ SHOP | MUSO SHOP 👑</strong><br>© 2026 Ҳамаи ҳуқуқҳо ҳифз шудаанд.</footer>
+<div class="modal" id="orderModal"><div class="modal-box"><h2>Фармоиши алмос 💎</h2><p id="chosenPackage"></p><label for="playerId">ID-и бозигари Free Fire</label><input id="playerId" inputmode="numeric" placeholder="ID-и бозӣ"><label for="customerName">Номи шумо</label><input id="customerName" placeholder="Ном"><label for="contactInfo">Рақами телефон ё Telegram</label><input id="contactInfo" placeholder="Роҳи тамос"><div class="modal-actions"><button class="btn" onclick="closeModal()">Бекор</button><button class="btn primary" onclick="submitOrder()">Фиристодани фармоиш</button></div><p class="note">Фармоиш ба сервер фиристода мешавад. Парол ё рамзи аккаунти бозиро ворид накунед.</p></div></div>
+<script>
+let packageList=[];
+async function loadPackages(){try{const r=await fetch('/api/packages');if(!r.ok)throw new Error('Хатои гирифтани бастаҳо');packageList=await r.json();renderProducts()}catch(e){document.getElementById('productList').innerHTML='<p>Бастаҳо бор нашуданд. Саҳифаро нав кунед.</p>'}}
+function renderProducts(){document.getElementById('productList').innerHTML=packageList.map((x,i)=>`<article class="card"><img src="images/diamond_${Math.min(i+1,6)}.png" alt="Алмос"><h3>${x.d} 💎</h3><div class="price">${x.p} сомонӣ</div><button class="buy" onclick="openOrder(${x.d},${x.p})">🛒 Харидан</button></article>`).join('')}
+let selected={d:0,p:0};function openOrder(d,p){selected={d,p};document.getElementById('chosenPackage').textContent=`Баста: ${d} алмос — ${p} сомонӣ`;document.getElementById('orderModal').classList.add('show')}
+function closeModal(){document.getElementById('orderModal').classList.remove('show')}
+async function submitOrder(){let playerId=document.getElementById('playerId').value.trim(),name=document.getElementById('customerName').value.trim(),contact=document.getElementById('contactInfo').value.trim();if(!playerId||!name||!contact){alert('Ҳамаи майдонҳоро пур кунед.');return}try{const r=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({diamonds:selected.d,playerId,name,contact})});const data=await r.json();if(!r.ok)throw new Error(data.error||'Фармоиш фиристода нашуд');alert('Фармоиши шумо қабул шуд!');closeModal();document.getElementById('playerId').value='';document.getElementById('customerName').value='';document.getElementById('contactInfo').value=''}catch(e){alert(e.message)}}
+loadPackages();
+</script></body></html>

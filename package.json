@@ -1,0 +1,14 @@
+{
+  "name": "almaz-shop-secure-admin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ALMAZ SHOP demo with server-protected admin page",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1"
+  }
+}
