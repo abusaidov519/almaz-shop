@@ -24,7 +24,23 @@ footer{text-align:center;border-top:1px solid #542078;padding:25px;color:#bfb1cb
 <h1 class="section-title" id="products">💎 Бастаҳои Алмос</h1><section class="products" id="productList"></section>
 <section class="features" id="how"><div class="feature"><div class="icon">🛡️</div><h3>Бехатар</h3><p>Маълумоти фармоиш барои коркарди фармоиш.</p></div><div class="feature"><div class="icon">⚡</div><h3>Расонидани тез</h3><p>Пас аз тасдиқи фармоиш.</p></div><div class="feature"><div class="icon">🎧</div><h3>Дастгирӣ</h3><p>Барои саволҳо бо мо тамос гиред.</p></div></section></main>
 <footer id="contact"><strong>💎 ALMAZ SHOP | MUSO SHOP 👑</strong><br>© 2026 Ҳамаи ҳуқуқҳо ҳифз шудаанд.</footer>
-<div class="modal" id="orderModal"><div class="modal-box"><h2>Фармоиши алмос 💎</h2><p id="chosenPackage"></p><label for="playerId">ID-и бозигари Free Fire</label><input id="playerId" inputmode="numeric" placeholder="ID-и бозӣ"><label for="customerName">Номи шумо</label><input id="customerName" placeholder="Ном"><label for="contactInfo">Рақами телефон ё Telegram</label><input id="contactInfo" placeholder="Роҳи тамос"><div class="modal-actions"><button class="btn" onclick="closeModal()">Бекор</button><button class="btn primary" onclick="submitOrder()">Фиристодани фармоиш</button></div><p class="note">Фармоиш ба сервер фиристода мешавад. Парол ё рамзи аккаунти бозиро ворид накунед.</p></div></div>
+<div class="modal" id="orderModal"><div class="modal-box"><h2>Фармоиши алмос 💎</h2><p id="chosenPackage"></p><label for="playerId">ID-и бозигари Free Fire</label><input id="playerId" inputmode="numeric" placeholder="ID-и бозӣ"><label for="customerName">Номи шумо</label><input id="customerName" placeholder="Ном"><label for="contactInfo">Рақами телефон ё Telegram</label><input id="contactInfo" placeholder="Роҳи тамос"><div class="modal-actions">
+  <label for="paymentMethod">Усули пардохт</label>
+<select id="paymentMethod" required>
+  <option value="">Интихоб кунед</option>
+  <option value="Alif">Alif</option>
+  <option value="Dushanbe City">Dushanbe City</option>
+  <option value="Eskhata">Eskhata</option>
+</select>
+
+<label for="paymentReceipt">Расиди пардохт (акс)</label>
+<input
+  type="file"
+  id="paymentReceipt"
+  accept="image/png,image/jpeg,image/webp"
+  required
+>
+<p class="note">Расидро барои санҷиш интихоб кунед.</p><button class="btn" onclick="closeModal()">Бекор</button><button class="btn primary" onclick="submitOrder()">Фиристодани фармоиш</button></div><p class="note">Фармоиш ба сервер фиристода мешавад. Парол ё рамзи аккаунти бозиро ворид накунед.</p></div></div>
 <script>
 let packageList=[];
 async function loadPackages(){try{const r=await fetch('/api/packages');if(!r.ok)throw new Error('Хатои гирифтани бастаҳо');packageList=await r.json();renderProducts()}catch(e){document.getElementById('productList').innerHTML='<p>Бастаҳо бор нашуданд. Саҳифаро нав кунед.</p>'}}
