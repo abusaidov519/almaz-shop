@@ -47,6 +47,48 @@ async function loadPackages(){try{const r=await fetch('/api/packages');if(!r.ok)
 function renderProducts(){document.getElementById('productList').innerHTML=packageList.map((x,i)=>`<article class="card"><img src="images/diamond_${Math.min(i+1,6)}.png" alt="Алмос"><h3>${x.d} 💎</h3><div class="price">${x.p} сомонӣ</div><button class="buy" onclick="openOrder(${x.d},${x.p})">🛒 Харидан</button></article>`).join('')}
 let selected={d:0,p:0};function openOrder(d,p){selected={d,p};document.getElementById('chosenPackage').textContent=`Баста: ${d} алмос — ${p} сомонӣ`;document.getElementById('orderModal').classList.add('show')}
 function closeModal(){document.getElementById('orderModal').classList.remove('show')}
-async function submitOrder(){let playerId=document.getElementById('playerId').value.trim(),name=document.getElementById('customerName').value.trim(),contact=document.getElementById('contactInfo').value.trim();if(!playerId||!name||!contact){alert('Ҳамаи майдонҳоро пур кунед.');return}try{const r=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({diamonds:selected.d,playerId,name,contact})});const data=await r.json();if(!r.ok)throw new Error(data.error||'Фармоиш фиристода нашуд');alert('Фармоиши шумо қабул шуд!');closeModal();document.getElementById('playerId').value='';document.getElementById('customerName').value='';document.getElementById('contactInfo').value=''}catch(e){alert(e.message)}}
+async function submitOrder(){
+try {
+const playerId=document.getElementById('playerId').value.trim();
+const name=document.getElementById('customerName').value.trim();
+const contact=document.getElementById('contactInfo').value.trim();
+const paymentMethod=document.getElementById('paymentMethod').value;
+const file=document.getElementById('paymentReceipt').files[0];
+
+if(!selected.d) throw new Error('Аввал баста интихоб кунед.');
+if(!playerId || !name || !contact || !paymentMethod || !file)
+throw new Error('Ҳамаи майдонҳоро пур кунед.');
+
+if(!['image/png','image/jpeg','image/webp'].includes(file.type))
+throw new Error('Танҳо акси PNG, JPG ё WEBP иҷозат аст.');
+
+if(file.size > 1800000)
+throw new Error('Акс бояд аз 1.8 MB хурд бошад.');
+
+const receiptData=await new Promise((resolve,reject)=>{
+const reader=new FileReader();
+reader.onload=()=>resolve(reader.result);
+reader.onerror=()=>reject(new Error('Хатои хондани акс.'));
+reader.readAsDataURL(file);
+});
+
+const r=await fetch('/api/orders',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({
+diamonds:selected.d,
+playerId,name,contact,paymentMethod,receiptData
+})
+});
+
+const data=await r.json();
+if(!r.ok) throw new Error(data.error || 'Хатои фиристодани фармоиш.');
+
+alert(data.message);
+closeModal();
+} catch(e) {
+alert(e.message);
+}
+}
 loadPackages();
 </script></body></html>
