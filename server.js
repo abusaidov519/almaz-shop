@@ -15,7 +15,7 @@ if (!ADMIN_USER || !ADMIN_PASSWORD || !SESSION_SECRET) {
   process.exit(1);
 }
 app.disable('x-powered-by');
-app.use(express.json({ limit: '20kb' }));
+app.use(express.json({ limit: '3mb' }));
 app.use(session({
   name: 'muso_admin_session', secret: SESSION_SECRET, resave: false, saveUninitialized: false,
   cookie: { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', maxAge: 60 * 60 * 1000 }
@@ -42,15 +42,53 @@ app.get('/admin.html', (req, res) => req.session?.isAdmin ? res.sendFile(path.jo
 
 app.get('/api/packages', (req, res) => res.json(readStore().packages));
 app.post('/api/orders', (req, res) => {
-  const { diamonds, playerId, name, contact } = req.body || {};
-  if (!Number.isInteger(Number(diamonds)) || !String(playerId || '').trim() || !String(name || '').trim() || !String(contact || '').trim())
+  const { diamonds, playerId, name, contact, paymentMethod, receiptData } = req.body || {};
+
+  if (
+    !Number.isInteger(Number(diamonds)) ||
+    !String(playerId || '').trim() ||
+    !String(name || '').trim() ||
+    !String(contact || '').trim()
+  ) {
     return res.status(400).json({ error: 'Ҳамаи майдонҳоро дуруст пур кунед.' });
+  }
+
+  if (!['Alif', 'Dushanbe City', 'Eskhata'].includes(paymentMethod)) {
+    return res.status(400).json({ error: 'Усули пардохт нодуруст аст.' });
+  }
+
+  if (
+    typeof receiptData !== 'string' ||
+    !/^data:image\/(jpeg|png|webp);base64,/.test(receiptData) ||
+    receiptData.length > 2500000
+  ) {
+    return res.status(400).json({ error: 'Расиди дурусти аксро фиристед.' });
+  }
+
   const store = readStore();
   const pack = store.packages.find(x => x.d === Number(diamonds));
-  if (!pack) return res.status(400).json({ error: 'Ин баста дигар дастрас нест. Саҳифаро нав кунед.' });
-  const order = { id: Date.now(), diamonds: pack.d, price: pack.p, playerId: String(playerId).trim().slice(0,40), name: String(name).trim().slice(0,80), contact: String(contact).trim().slice(0,100), status: 'Нав', created: new Date().toLocaleString('tg-TJ') };
-  store.orders.push(order); writeStore(store);
-  res.json({ ok: true, message: 'Фармоиши шумо қабул шуд.' });
+
+  if (!pack) {
+    return res.status(400).json({ error: 'Ин баста дигар дастрас нест.' });
+  }
+
+  const order = {
+    id: Date.now(),
+    diamonds: pack.d,
+    price: pack.p,
+    playerId: String(playerId).trim().slice(0, 40),
+    name: String(name).trim().slice(0, 80),
+    contact: String(contact).trim().slice(0, 80),
+    paymentMethod,
+    receiptData,
+    status: 'Интизори санҷиши пардохт',
+    created: new Date().toISOString()
+  };
+
+  store.orders.push(order);
+  writeStore(store);
+
+  res.json({ ok: true, message: 'Фармоиш қабул шуд. Пардохт бояд санҷида шавад.' });
 });
 app.post('/api/login', (req, res, next) => {
   const { username, password } = req.body || {};
