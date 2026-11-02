@@ -15,7 +15,7 @@ if (!ADMIN_USER || !ADMIN_PASSWORD || !SESSION_SECRET) {
   process.exit(1);
 }
 app.disable('x-powered-by');
-app.use(express.json({ limit: '3mb' }));
+app.use(express.json({ limit: '4mb' }));
 app.use(session({
   name: 'muso_admin_session', secret: SESSION_SECRET, resave: false, saveUninitialized: false,
   cookie: { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', maxAge: 60 * 60 * 1000 }
