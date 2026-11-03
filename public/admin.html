@@ -1,26 +1,281 @@
 <!DOCTYPE html>
-<html lang="tg"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MUSO SHOP | Admin</title>
+<html lang="tg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MUSO SHOP | Admin</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;background:#090510;color:#fff;font-family:Arial,sans-serif}header{padding:20px 5%;background:#130b20;border-bottom:1px solid #7621a5;display:flex;justify-content:space-between;align-items:center;gap:12px}h1{font-size:25px;margin:0}h1 span{color:#c25aff}.wrap{max-width:1100px;margin:28px auto;padding:0 16px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.box,.panel{background:#160d22;border:1px solid #582477;border-radius:15px;padding:20px}.label{color:#c9b8d8}.num{font-size:30px;font-weight:bold;margin-top:10px;color:#e5b7ff}.panel{margin-top:20px;overflow:auto}h2{margin-top:0}table{width:100%;border-collapse:collapse;min-width:620px}th,td{text-align:left;padding:12px;border-bottom:1px solid #422052}input{background:#090510;color:white;border:1px solid #69318a;border-radius:8px;padding:10px;width:100%;margin:6px 0 12px}button{border:0;border-radius:9px;padding:10px 15px;background:#8500df;color:white;font-weight:bold;cursor:pointer}.danger{background:#8d263e}.secondary{background:#34213f}.form{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;align-items:end}.small{font-size:13px;color:#c7b7d3;line-height:1.5}.toplink{color:#e5b7ff;text-decoration:none}.status{padding:6px 9px;border-radius:8px;background:#39214a;color:#e9c9ff}.price-edit{max-width:110px;margin:0}.msg{color:#ffe58a;min-height:22px;margin:8px 0}
-@media(max-width:700px){.grid{grid-template-columns:1fr}.form{grid-template-columns:1fr}header{flex-wrap:wrap}}
-</style></head><body>
-<header><h1>👑 MUSO <span>SHOP</span> — Admin</h1><div><a class="toplink" href="/">← Ба сайт</a> &nbsp; <button onclick="logout()">Баромадан</button></div></header>
-<main class="wrap"><div class="grid"><div class="box"><div class="label">Бастаҳои алмос</div><div class="num" id="count">0</div></div><div class="box"><div class="label">Ҳамаи фармоишҳо</div><div class="num" id="ordersCount">0</div></div><div class="box"><div class="label">Фармоишҳои нав</div><div class="num" id="newCount">0</div></div></div>
-<section class="panel"><h2>Идоракунии бастаҳо</h2><p class="small">Барои тағйири нарх аз майдони нарх истифода баред. Бастаҳои якхела илова карда намешаванд.</p><div class="form"><label>Миқдори алмос<input id="diamonds" type="number" min="1" placeholder="700"></label><label>Нарх (сомонӣ)<input id="price" type="number" min="1" placeholder="35"></label><button onclick="addPackage()">Илова кардан</button></div><div id="packageMsg" class="msg"></div><div id="packages"></div></section>
-<section class="panel"><h2>Фармоишҳо</h2><div id="orders"></div></section></main>
+*{box-sizing:border-box}
+body{margin:0;background:#090510;color:#fff;font-family:Arial,sans-serif}
+header{padding:20px 5%;background:#130b20;border-bottom:1px solid #7621a5;display:flex;justify-content:space-between;align-items:center;gap:12px}
+h1{font-size:25px;margin:0}
+h1 span{color:#c25aff}
+.wrap{max-width:1100px;margin:28px auto;padding:0 16px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.box,.panel{background:#160d22;border:1px solid #582477;border-radius:15px;padding:20px}
+.label{color:#c9b8d8}
+.num{font-size:30px;font-weight:bold;margin-top:10px;color:#e5b7ff}
+.panel{margin-top:20px;overflow:auto}
+h2{margin-top:0}
+table{width:100%;border-collapse:collapse;min-width:620px}
+th,td{text-align:left;padding:12px;border-bottom:1px solid #422052}
+input{background:#090510;color:white;border:1px solid #69318a;border-radius:8px;padding:10px;width:100%;margin:6px 0 12px}
+button{border:0;border-radius:9px;padding:10px 15px;background:#8500df;color:white;font-weight:bold;cursor:pointer}
+.danger{background:#8d263e}
+.secondary{background:#34213f}
+.form{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;align-items:end}
+.small{font-size:13px;color:#c7b7d3;line-height:1.5}
+.toplink{color:#e5b7ff;text-decoration:none}
+.status{padding:6px 9px;border-radius:8px;background:#39214a;color:#e9c9ff}
+.price-edit{max-width:110px;margin:0}
+.msg{color:#ffe58a;min-height:22px;margin:8px 0}
+@media(max-width:700px){
+.grid{grid-template-columns:1fr}
+.form{grid-template-columns:1fr}
+header{flex-wrap:wrap}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>👑 MUSO <span>SHOP</span> — Admin</h1>
+<div>
+<a class="toplink" href="/">← Ба сайт</a>
+&nbsp;
+<button onclick="logout()">Баромадан</button>
+</div>
+</header>
+
+<main class="wrap">
+
+<div class="grid">
+<div class="box">
+<div class="label">Бастаҳои алмос</div>
+<div class="num" id="count">0</div>
+</div>
+
+<div class="box">
+<div class="label">Ҳамаи фармоишҳо</div>
+<div class="num" id="ordersCount">0</div>
+</div>
+
+<div class="box">
+<div class="label">Фармоишҳои нав</div>
+<div class="num" id="newCount">0</div>
+</div>
+</div>
+
+<section class="panel">
+<h2>Идоракунии бастаҳо</h2>
+<p class="small">Барои тағйири нарх аз майдони нарх истифода баред.</p>
+
+<div class="form">
+<label>Миқдори алмос
+<input id="diamonds" type="number" min="1" placeholder="700">
+</label>
+
+<label>Нарх (сомонӣ)
+<input id="price" type="number" min="1" placeholder="35">
+</label>
+
+<button onclick="addPackage()">Илова кардан</button>
+</div>
+
+<div id="packageMsg" class="msg"></div>
+<div id="packages"></div>
+</section>
+
+<section class="panel">
+<h2>Фармоишҳо</h2>
+<div id="orders"></div>
+</section>
+
+</main>
+
 <script>
 let packages=[],orders=[];
-async function api(url,options={}){const r=await fetch(url,{...options,headers:{'Content-Type':'application/json',...(options.headers||{})}});let data={};try{data=await r.json()}catch{}if(!r.ok)throw new Error(data.error||'Хато рӯй дод');return data}
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-async function load(){try{[packages,orders]=await Promise.all([api('/api/packages'),api('/api/admin/orders')]);render()}catch(e){alert(e.message);if(e.message.includes('ворид'))location.href='/admin-login.html'}}
-async function addPackage(){const d=Number(document.getElementById('diamonds').value),p=Number(document.getElementById('price').value);try{packages=await api('/api/admin/packages',{method:'POST',body:JSON.stringify({d,p})});document.getElementById('diamonds').value='';document.getElementById('price').value='';document.getElementById('packageMsg').textContent='Баста илова шуд.';render()}catch(e){document.getElementById('packageMsg').textContent=e.message}}
-async function savePrice(id){const p=Number(document.getElementById('price-'+id).value);try{packages=await api('/api/admin/packages/'+id,{method:'PUT',body:JSON.stringify({p})});document.getElementById('packageMsg').textContent='Нарх сабт шуд.';render()}catch(e){document.getElementById('packageMsg').textContent=e.message}}
-async function removePackage(id){if(!confirm('Ин баста нест карда шавад?'))return;try{packages=await api('/api/admin/packages/'+id,{method:'DELETE'});render()}catch(e){alert(e.message)}}
-async function setStatus(id,status){try{orders=await api('/api/admin/orders/'+id,{method:'PATCH',body:JSON.stringify({status})});render()}catch(e){alert(e.message)}}
-async function deleteOrder(id){if(!confirm('Ин фармоиш нест карда шавад?'))return;try{orders=await api('/api/admin/orders/'+id,{method:'DELETE'});render()}catch(e){alert(e.message)}}
-function render(){document.getElementById('count').textContent=packages.length;document.getElementById('ordersCount').textContent=orders.length;document.getElementById('newCount').textContent=orders.filter(x=>x.status==='Нав').length;
-document.getElementById('orders').innerHTML=orders.length?'<table><tr><th>Вақт</th><th>Баста</th><th>ID бозӣ</th><th>Ном</th><th>Тамос</th><th>Расид</th><th>Ҳолат</th><th>Амалиёт</th></tr>'+orders.slice().reverse().map(x=>{const receipt=typeof x.receiptData==='string'&&/^data:image\/(jpeg|png|webp);base64,/.test(x.receiptData)?`<a href="${esc(x.receiptData)}" target="_blank" rel="noopener">Дидани расид</a>`:'Нест';return `<tr><td>${esc(x.created)}</td><td>${x.diamonds} 💎 / ${x.price} с.</td><td>${esc(x.playerId)}</td><td>${esc(x.name)}</td><td>${esc(x.contact)}</td><td>${receipt}</td><td><span class="status">${esc(x.status)}</span></td><td><button onclick="setStatus(${x.id},'Тасдиқ шуд')">Тасдиқ</button> <button class="secondary" onclick="setStatus(${x.id},'Иҷро шуд')">Иҷро шуд</button> <button class="danger" onclick="deleteOrder(${x.id})">Нест</button></td></tr>`}).join('')+'</table>':'<p class="label">Ҳоло фармоиш нест.</p>'
-document.getElementById('orders').innerHTML=orders.length?'<table><tr><th>Вақт</th><th>Баста</th><th>ID бозӣ</th><th>Ном</th><th>Тамос</th><th>Ҳолат</th><th>Амалиёт</th></tr>'+orders.slice().reverse().map(x=>`<tr><td>${esc(x.created)}</td><td>${x.diamonds} 💎 / ${x.price} с.</td><td>${esc(x.playerId)}</td><td>${esc(x.name)}</td><td>${esc(x.contact)}</td><td><span class="status">${esc(x.status)}</span></td><td><button onclick="setStatus(${x.id},'Тасдиқ шуд')">Тасдиқ</button> <button class="secondary" onclick="setStatus(${x.id},'Иҷро шуд')">Иҷро шуд</button> <button class="danger" onclick="deleteOrder(${x.id})">Нест</button></td></tr>`).join('')+'</table>':'<p class="label">Ҳоло фармоиш нест.</p>'}
-async function logout(){await fetch('/api/logout',{method:'POST'});location.href='/admin-login.html'}
+
+async function api(url,options={}){
+const r=await fetch(url,{
+...options,
+headers:{
+'Content-Type':'application/json',
+...(options.headers||{})
+}
+});
+let data={};
+try{data=await r.json()}catch{}
+if(!r.ok)throw new Error(data.error||'Хато рӯй дод');
+return data;
+}
+
+function esc(s){
+return String(s??'').replace(/[&<>"']/g,c=>({
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#39;'
+}[c]));
+}
+
+async function load(){
+try{
+[packages,orders]=await Promise.all([
+api('/api/packages'),
+api('/api/admin/orders')
+]);
+render();
+}catch(e){
+alert(e.message);
+if(e.message.includes('ворид')){
+location.href='/admin-login.html';
+}
+}
+}
+
+async function addPackage(){
+const d=Number(document.getElementById('diamonds').value);
+const p=Number(document.getElementById('price').value);
+
+try{
+packages=await api('/api/admin/packages',{
+method:'POST',
+body:JSON.stringify({d,p})
+});
+
+document.getElementById('diamonds').value='';
+document.getElementById('price').value='';
+document.getElementById('packageMsg').textContent='Баста илова шуд.';
+render();
+
+}catch(e){
+document.getElementById('packageMsg').textContent=e.message;
+}
+}
+
+async function savePrice(id){
+const p=Number(document.getElementById('price-'+id).value);
+
+try{
+packages=await api('/api/admin/packages/'+id,{
+method:'PUT',
+body:JSON.stringify({p})
+});
+
+document.getElementById('packageMsg').textContent='Нарх сабт шуд.';
+render();
+
+}catch(e){
+document.getElementById('packageMsg').textContent=e.message;
+}
+}
+
+async function removePackage(id){
+if(!confirm('Ин баста нест карда шавад?'))return;
+
+try{
+packages=await api('/api/admin/packages/'+id,{
+method:'DELETE'
+});
+render();
+}catch(e){
+alert(e.message);
+}
+}
+
+async function setStatus(id,status){
+try{
+orders=await api('/api/admin/orders/'+id,{
+method:'PATCH',
+body:JSON.stringify({status})
+});
+render();
+}catch(e){
+alert(e.message);
+}
+}
+
+async function deleteOrder(id){
+if(!confirm('Ин фармоиш нест карда шавад?'))return;
+
+try{
+orders=await api('/api/admin/orders/'+id,{
+method:'DELETE'
+});
+render();
+}catch(e){
+alert(e.message);
+}
+}
+
+function render(){
+
+document.getElementById('count').textContent=packages.length;
+document.getElementById('ordersCount').textContent=orders.length;
+document.getElementById('newCount').textContent=
+orders.filter(x=>x.status==='Нав').length;
+
+document.getElementById('packages').innerHTML=
+'<table><tr><th>Алмос</th><th>Нарх (сомонӣ)</th><th>Амалиёт</th></tr>'+
+packages.map(x=>`
+<tr>
+<td>${x.d} 💎</td>
+<td>
+<input class="price-edit" id="price-${x.id}" type="number" min="1" value="${x.p}">
+</td>
+<td>
+<button onclick="savePrice(${x.id})">Сабт</button>
+<button class="danger" onclick="removePackage(${x.id})">Нест кардан</button>
+</td>
+</tr>
+`).join('')+
+'</table>';
+
+document.getElementById('orders').innerHTML=orders.length?
+'<table><tr><th>Вақт</th><th>Баста</th><th>ID бозӣ</th><th>Ном</th><th>Тамос</th><th>Расид</th><th>Ҳолат</th><th>Амалиёт</th></tr>'+
+orders.slice().reverse().map(x=>{
+
+const receipt=
+typeof x.receiptData==='string' &&
+/^data:image\/(jpeg|png|webp);base64,/.test(x.receiptData)
+?
+`<a href="${esc(x.receiptData)}" target="_blank" rel="noopener">Дидани расид</a>`
+:
+'Нест';
+
+return `
+<tr>
+<td>${esc(x.created)}</td>
+<td>${x.diamonds} 💎 / ${x.price} с.</td>
+<td>${esc(x.playerId)}</td>
+<td>${esc(x.name)}</td>
+<td>${esc(x.contact)}</td>
+<td>${receipt}</td>
+<td><span class="status">${esc(x.status)}</span></td>
+<td>
+<button onclick="setStatus(${x.id},'Тасдиқ шуд')">Тасдиқ</button>
+<button class="secondary" onclick="setStatus(${x.id},'Иҷро шуд')">Иҷро шуд</button>
+<button class="danger" onclick="deleteOrder(${x.id})">Нест</button>
+</td>
+</tr>
+`;
+}).join('')+
+'</table>'
+:
+'<p class="label">Ҳоло фармоиш нест.</p>';
+}
+
+async function logout(){
+await fetch('/api/logout',{method:'POST'});
+location.href='/admin-login.html';
+}
+
 load();
-</script></body></html>
+</script>
+
+</body>
+</html>
